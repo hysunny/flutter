@@ -47,4 +47,47 @@ void main() {
       ],
     ));
   });
+
+  testWidgets('RichText with softWrap can break the text or not',
+      (WidgetTester tester) async {
+    const double fontSize = 16.0;
+    await tester.pumpWidget(Center(
+      child: Container(
+        width: 200,
+        child: RichText(
+          textDirection: TextDirection.ltr,
+          text: const TextSpan(
+              text:
+                  'softWrap is used to determine whether the text should break '
+                  'at soft line breaks.',
+              style: TextStyle(fontSize: fontSize)),
+          softWrap: false,
+        ),
+      ),
+    ));
+
+    Size size = tester.getSize(find.byType(RichText));
+    final double height = size.height;
+    expect(height, fontSize);
+
+    await tester.pumpWidget(Center(
+      child: Container(
+        width: 200,
+        child: RichText(
+          textDirection: TextDirection.ltr,
+          text: const TextSpan(
+              text:
+                  'softWrap is used to determine whether the text should break '
+                  'at soft line breaks.',
+              style: TextStyle(fontSize: fontSize)),
+          softWrap: true,
+        ),
+      ),
+    ));
+
+    size = tester.getSize(find.byType(RichText));
+    final double newHeight = size.height;
+
+    expect(newHeight, greaterThan(height));
+  });
 }
